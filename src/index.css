@@ -81,3 +81,10 @@ input[type="checkbox"] {
 #to-do-wrapper {
 
 }
+.delete{
+  width: auto !important;
+  font-size: 10px !important;
+  margin-left: 10px;
+  margin-right: 10px;
+  background-color: red !important;
+}
