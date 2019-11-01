@@ -4,9 +4,9 @@ import './index.css';
 let styles = {}
 function Check(props) {
   return (
-    <div style={{display:'flex'}}>
+    <div style={{display:'flex', marginTop: '5px',}}>
       <input type="checkbox" onChange={() => {props.whenChecked()}} disabled={false /*props.isChecked use this is we don't want toggle ability*/}/>
-      <div className={"checkbox-text"} style={props.isChecked ? {textDecoration: "line-through",} : null}>{props.text}</div>
+      <div className={"checkbox-text"} style={props.isChecked ? {textDecoration: "line-through", opacity: 0.2,} : null}>{props.text}</div>
       {
         props.isChecked && <input type={"submit"} onClick={()=>{props.deleteComponent()}} value={'Delete'} className={"delete"}/>
       }

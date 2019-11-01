@@ -67,6 +67,9 @@ input[type="submit"] {
   border-radius: 5px;
   cursor: pointer;
 }
+input[type="submit"]:hover {
+  opacity:0.5;
+}
 
 input[type="checkbox"] {
   width: 25px;
@@ -83,7 +86,8 @@ input[type="checkbox"] {
 }
 .delete{
   width: auto !important;
-  font-size: 10px !important;
+  font-size: 15px !important;
+  margin-top: 0 !important;
   margin-left: 10px;
   margin-right: 10px;
   background-color: red !important;
