@@ -61,7 +61,14 @@ export function CheckList() {
   const onSubmit = () => {
     if (!inputText) return;
     let t = Object.assign({}, toDos);
-    const currentMax = Math.max(Object.keys(t).length); // Too lazy to generate real hashes for this so we're just using numbers
+    let keys = Object.keys(t);
+    keys = keys.map((key) => { //For good measure, sanitize all as ints
+      return parseInt(key)
+    }).sort((a,b) => { //Running a sort on this is probably a bit overkill. Pretty sure Object.keys() preserves order
+      return a - b;
+    });
+    console.log(keys)
+    let currentMax = parseInt(keys[keys.length - 1]) || 0; //The issue with previous code was we were measuring by array length, so if the last element == length then there's an issue when we try to insert a duplicate key. last element == length happens when you delete on of the todos in the middle of the array
     t[currentMax + 1] = {
       inputText: inputText,
       isChecked: false,
