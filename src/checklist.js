@@ -6,7 +6,7 @@ function Check(props) {
   return (
     <div style={{display:'flex'}}>
       <input type="checkbox" onChange={() => {props.whenChecked()}}/>
-      <div class={"checkbox-text"}>{props.text}</div>
+      <div className={"checkbox-text"}>{props.text}</div>
     </div>
   )
 }
@@ -25,7 +25,7 @@ export function CheckList() {
   // Render-ing functions
   const renderCheck = (props) => {
     return (
-      <Check text={props.text} whenChecked={props.whenChecked}/>
+      <Check key={props.key} text={props.text} whenChecked={props.whenChecked}/>
     )
   }
 
@@ -35,6 +35,7 @@ export function CheckList() {
       const text = toDos[key]
       toDoComponents.push(renderCheck(
         {
+          key: key,
           text: text,
           whenChecked: () => { whenChecked(key) },
         }
