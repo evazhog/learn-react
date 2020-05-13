@@ -125,8 +125,8 @@ class Game extends React.Component {
 // ========================================
 
 ReactDOM.render(
-  // <Game />, //This is bad but I don't want to use routing right now
-  <CheckList />,
+  <Game />, //This is bad but I don't want to use routing right now
+  // <CheckList />,
   document.getElementById('root')
 );
 
