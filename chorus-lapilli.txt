@@ -35,3 +35,5 @@ I now have to implement the feature where if a user occupies the center, they mu
   I realized that I can just an extra edge case check in the TO square logic section.
   
   I created a flag called moveIsValid in the TO squaare logic section that would be unset if any of the edge case checks failed
+
+And the app is now done

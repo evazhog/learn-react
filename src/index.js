@@ -8,6 +8,8 @@ function Square(props) {
     <button
       className="square"
       onClick={props.onClick}
+      id={props.id}
+      style={{"cursor":"pointer"}}
     >
       {props.value}
     </button>
@@ -18,6 +20,7 @@ class Board extends React.Component {
   renderSquare(i) {
     return (
       <Square 
+        id={i}
         value={this.props.squares[i]} 
         onClick={() => this.props.onClick(i)}
       />
@@ -99,6 +102,7 @@ class Game extends React.Component {
           return
         }
 
+        document.getElementById(i).style.backgroundColor = "lightgreen";
         this.setState({
           from: i
         })
@@ -145,6 +149,9 @@ class Game extends React.Component {
           })
         }
 
+        // Regardless if move was successful or not, exiting will return user to start of selection,
+        // Hence we reset the color
+        document.getElementById(this.state.from).style.backgroundColor = "white";
       }
     }
   }
@@ -155,8 +162,14 @@ class Game extends React.Component {
     const winner = calculateWinner(current.squares);
 
     let status;
-    if (winner) status = 'Winner is: ' + winner;
-    else status = 'Next player: ' + (this.state.xIsNext ? 'X' : '0');
+    if (winner) {
+      status = 'Winner is: ' + winner;
+      const squares = document.getElementsByClassName("square");
+      for (const square of squares) {
+        square.style.cursor = ""
+      }
+    }
+    else {status = 'Next player: ' + (this.state.xIsNext ? 'X' : '0');}
 
     return (
       <div className="game">
