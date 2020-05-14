@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { CheckList } from './checklist';
 
 import './index.css';
 
@@ -58,6 +57,9 @@ class Game extends React.Component {
       }],
       xIsNext: true,
       stepNumber: 0,
+      xNumRice: 0,
+      oNumRice: 0,
+      from: -1,
     };
   }
 
@@ -65,41 +67,93 @@ class Game extends React.Component {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
-    if (calculateWinner(squares) || squares[i]) return;
-    squares[i] = this.state.xIsNext ? 'X' : '0';
-    this.setState({
-      history: history.concat([{
-        squares: squares,
-      }]),
-      xIsNext: !this.state.xIsNext,
-      stepNumber: history.length,
-    });
-  }
 
-  jumpTo(step) {
-    this.setState(
-      {
-        stepNumber: step,
-        xIsNext: (step % 2) === 0,
+    if (calculateWinner(squares)) return; //Do nothing if there's already a winner
+
+    const xExecutingTurn = this.state.xIsNext;
+    const numRice = xExecutingTurn ? this.state.xNumRice : this.state.oNumRice;
+
+    if (numRice < 3) {
+      if (squares[i]) return; //We can't insert a new rice in an already occupied square
+      squares[i] = xExecutingTurn ? 'X' : '0';
+      this.setState({
+        history: history.concat([{
+          squares: squares,
+        }]),
+        xIsNext: !this.state.xIsNext,
+        stepNumber: history.length,
+        xNumRice: xExecutingTurn ? this.state.xNumRice + 1 : this.state.xNumRice,
+        oNumRice: !xExecutingTurn ? this.state.oNumRice + 1 : this.state.oNumRice,
+      });
+    }
+    else {
+      const me = xExecutingTurn ? "X" : "0"
+      const iOccupyCenter = squares[4] === me
+
+      if (this.state.from === -1) {
+        console.log("Selecting FROM: ", i)
+
+        // if attempting to select from an empty square or from a square that has opponent's rice in it, early exit and ask user to select again
+        if (!squares[i] || squares[i] !== me) {
+          alert(`Please select again, you must pick a square with a ${me}`)
+          return
+        }
+
+        this.setState({
+          from: i
+        })
       }
-    )
+      else {
+        console.log("FROM ", this.state.from, ", TO ", i)
+        let moveIsValid = true;
+        // TO square must be empty. if it's not, alert and set flag
+        if (squares[i]) {
+          alert(`You must select an empty square to move your rice, the square you selected currently has: ${squares[i]}\nPlease restart your selection.`)
+          moveIsValid = false;
+        }
+
+        const adjSquareIndices = [[1, 4, 3], [0, 2, 3, 4, 5], [1, 4, 5], [0, 1, 4, 6, 7], [0, 1, 2, 3, 5, 6, 7, 8], [2, 1, 4, 7, 8], [3, 4, 7], [6, 3, 4, 5, 8], [7, 4, 5]];
+        // TO square must be adjacent. if it's not alert and set flag
+        if (!adjSquareIndices[this.state.from].includes(i)) {
+          moveIsValid ? alert("You must select a square that is adjacent vertically, horizontally, or diagonally\nPlease restart your selection."): null;
+          moveIsValid = false;
+        }
+
+        // Modify squares as if we've completed the move
+        squares[this.state.from] = null;
+        squares[i] = me;
+        // If I occupy the center square my next move must either win or vacate the square, if it does not alert and set flag
+        if (iOccupyCenter && !(calculateWinner(squares) || !squares[4])) {
+          moveIsValid ? alert("You occupy the center square, your next move must either win or vacate the center\nPlease restart your selection.") : null;
+          moveIsValid = false;
+        }
+
+        if (moveIsValid) {
+          this.setState({
+            history: history.concat([{
+              squares: squares,
+            }]),
+            xIsNext: !this.state.xIsNext,
+            stepNumber: history.length,
+            from: -1
+          })
+        }
+        else {
+          // Reset this.state.from
+          this.setState({
+            from: -1
+          })
+        }
+
+      }
+    }
   }
 
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
-    
-    const moves = history.map((step, move) => {
-      const desc = move ? 
-        'Go to move #' + move :
-        'Go to start';
-      return (
-        <li key={move}>
-          <button onClick={() => this.jumpTo(move)}>{desc}</button>
-        </li>
-      );
-    });
+
     let status;
     if (winner) status = 'Winner is: ' + winner;
     else status = 'Next player: ' + (this.state.xIsNext ? 'X' : '0');
@@ -115,7 +169,6 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol>{moves}</ol>
         </div>
       </div>
     );
@@ -125,8 +178,7 @@ class Game extends React.Component {
 // ========================================
 
 ReactDOM.render(
-  <Game />, //This is bad but I don't want to use routing right now
-  // <CheckList />,
+  <Game />,
   document.getElementById('root')
 );
 

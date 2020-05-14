@@ -1,0 +1,37 @@
+I began with a finished version of tic-tac-toe
+
+I first modified the state of the Game component, creating 2 new fields xNumRice and oNumRice to track how many Xs or 0s were on the board at a given time
+
+I then modified the behavior within handleClick, so it first checks that xNumRice or oNumRice (depending on who's turn it currently is) is less than 3 before doing default behavior
+  Default behavior is defined as simply inserting a rice grain when an empty spot is clicked
+  I used a ternary operator to define a const numRice
+    if this.state.xIsNext is true then numRice is set to xNumRice
+    else numRice is set to oNumRice
+  
+  I wrapped the default behavior within an if block that checked for numRice < 3
+  I added an else block to implement later to handle the different game behavior for after each player's first 3 turns
+
+After each player's first 3 turns, the game changes considerably, my first task to figure out was how to allow players to "move" pieces from one square to another.
+  I initially considered adding a 2nd handleClick function to the Game component, to handle the separate game feature, but this didn't seem like a good idea.
+    This doesn't make sense because it would place a certain amount of the logic on what funciton to call into the Square component, and this is bad React practice.
+
+  I dedcided to add an additional state field to the Game component, tracking whether the current click was to select a "from" square or a "to" square
+    This was done through the introduction of another state field called "from" which defaulted to -1 and tracked the "from" square that the user clicked
+
+    If handleClick was called and numRice > 3 and from was -1 then we set from to i and waited on the user's next click
+    If from wasn't -1 then it indicated that the game component was wainting on the user's next click (effectively selecting the "to" square)
+      When the game got the "next click" it could then move the rice grain from the from square to the to square.
+    
+    While developing I had to implement several edge case checks
+      The user cannot select a FROM square that is empty or has their opponent's grain in it (i.e. X cannot select a square that already has an 0)
+      The user cannot select a TO square that is not empty (i.e. X cannot select a TO square that already has a different X in it)
+      The user must select a TO square that is adjacent to the selected square
+
+      In these cases I sent an alert message and early returned, which allowed the user to make another selection from the beginning (i.e. restart by selecting the FROM square)
+
+  I realized I had to disable the lock on clicking squares that already had a grain in them, I moved this early return check to within the if block that checked for numRice < 3
+
+I now have to implement the feature where if a user occupies the center, they must vaccate it on their next turn or win.
+  I realized that I can just an extra edge case check in the TO square logic section.
+  
+  I created a flag called moveIsValid in the TO squaare logic section that would be unset if any of the edge case checks failed
