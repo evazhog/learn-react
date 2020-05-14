@@ -36,4 +36,26 @@ I now have to implement the feature where if a user occupies the center, they mu
   
   I created a flag called moveIsValid in the TO squaare logic section that would be unset if any of the edge case checks failed
 
-And the app is now done
+And the app is now done, The main logic loop is as follows
+
+if (numRice < 3){
+  Handle normal tic-tac-toe gameplay
+}
+else{
+  calculate if user has grain in the middle square
+  if (selecting FROM square){
+    // check for valid selection of FROM square
+    
+    store FROM square and don't change game state
+  }
+  else {
+    // check if TO square is empty
+    // check if TO square is adjacent
+    // if user has grain in middle square, check if attempted move either wins the game or moves out of the center
+
+    move contents of FROM square into TO square, changing gamestate
+  }
+}
+
+
+I added some minor conditional styling at the end but this need not be documented

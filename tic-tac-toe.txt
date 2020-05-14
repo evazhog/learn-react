@@ -1,0 +1,50 @@
+Full disclosure, I've previously completed the tutorial before CS97, and am familiar with react development, so this lab journal will be brief
+
+installing with npx create-react-app my-app
+  I removed the default files that come in the ./src directory by default with create-react-app
+  
+  I copied over the boilerplate code that the tutorial provided
+
+  I added the following lines
+    import React from 'react';
+    import ReactDOM from 'react-dom';
+    import './index.css';
+  to the top of index.js
+
+  importing react allows us to use react
+  importing reactDOM allows us to interact with the document object model
+  importing index.css imports styling (cascading style sheets)
+
+  running npm start works without a hitch, all dependencies were already npm installed (or yarn install depending on how you called create-react-app) when running create-react-app
+
+Creating the components
+  I really like what the tutorial says about typing out the code instead of copy and pasting in order to build muscle memory
+
+  Passing props
+    I changed the renderSquare method in the Board component to display a parameter i.
+    I then changed the render method in the Square component to display {this.props.value} as the innerHTML of the button
+
+    I tested this by calling renderSquare within the Board component's render method with varying input
+      renderSquare("asdf") created a button with "asdf" displayed on screen
+    
+    I added an onClick prop to square, which expects a function callback to be passed
+  
+Completing gameplay
+  I skipped the part where the tutorial had us implement game state within each square, and instead opted to directly implement tracking of the game state within a new Game component
+
+  within the Board component's renderSquare method I passed the onClick prop into Square
+
+  Instead of having the gamestate tracked within the Board component, I opted to lift it one further level up into a Game component
+    In game I had a function called handleClick() which was passed as props all the way down to Squares
+
+    handleClick would check if the square was empty, and if it was, change the value prop of the square to either a X or a 0 depending on who's turn it was.
+  
+  I thought the section on Immutability in the tutorial was very interesting to read
+
+  I added the new state field xIsNext to my Game component
+    This essentially will act as a flip flop to track which player's turn it currently is
+  
+Detecting winner
+  Finally I implemented the tutorial's calculateWinner function, which is invoked on every render() of the Game component
+
+
