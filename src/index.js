@@ -92,6 +92,7 @@ class Game extends React.Component {
     else {
       const me = xExecutingTurn ? "X" : "0"
       const iOccupyCenter = squares[4] === me
+      const adjSquareIndices = [[1, 4, 3], [0, 2, 3, 4, 5], [1, 4, 5], [0, 1, 4, 6, 7], [0, 1, 2, 3, 5, 6, 7, 8], [2, 1, 4, 7, 8], [3, 4, 7], [6, 3, 4, 5, 8], [7, 4, 5]];
 
       if (this.state.from === -1) {
         console.log("Selecting FROM: ", i)
@@ -103,6 +104,11 @@ class Game extends React.Component {
         }
 
         document.getElementById(i).style.backgroundColor = "lightgreen";
+        for (const adjSqIndex of adjSquareIndices[i]) {
+          if (!squares[adjSqIndex]) {
+            document.getElementById(adjSqIndex).style.backgroundColor = "lightcyan";
+          }
+        }
         this.setState({
           from: i
         })
@@ -116,7 +122,7 @@ class Game extends React.Component {
           moveIsValid = false;
         }
 
-        const adjSquareIndices = [[1, 4, 3], [0, 2, 3, 4, 5], [1, 4, 5], [0, 1, 4, 6, 7], [0, 1, 2, 3, 5, 6, 7, 8], [2, 1, 4, 7, 8], [3, 4, 7], [6, 3, 4, 5, 8], [7, 4, 5]];
+        
         // TO square must be adjacent. if it's not alert and set flag
         if (!adjSquareIndices[this.state.from].includes(i)) {
           moveIsValid ? alert("You must select a square that is adjacent vertically, horizontally, or diagonally\nPlease restart your selection."): null;
@@ -150,8 +156,10 @@ class Game extends React.Component {
         }
 
         // Regardless if move was successful or not, exiting will return user to start of selection,
-        // Hence we reset the color
-        document.getElementById(this.state.from).style.backgroundColor = "white";
+        // Hence we reset the color of all squares
+        for (let index = 0; index <= 8; index++) {
+          document.getElementById(index).style.backgroundColor = "white";
+        }
       }
     }
   }
